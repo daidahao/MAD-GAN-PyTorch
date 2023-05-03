@@ -49,7 +49,7 @@ Thanks for the [original MAD-GAN implementation](https://github.com/imperial-qor
 
 ## Citation
 
-If you find this implementation useful in your research, please consider citing the original paper:
+If you find this implementation useful in your research, please consider citing the original paper and this repo:
 
 ```bibtex
 @inproceedings{10.1007/978-3-030-30490-4_56,
@@ -62,5 +62,13 @@ If you find this implementation useful in your research, please consider citing 
   pages        = {703--716},
   isbn         = {978-3-030-30490-4},
   editor       = {Tetko, Igor V. and K{\r{u}}rkov{\'a}, V{\v{e}}ra and Karpov, Pavel and Theis, Fabian}
+}
+@software{Dai_MAD-GAN_in_PyTorch_2023,
+  title        = {{MAD-GAN in PyTorch}},
+  author       = {Dai, Zhihao},
+  year         = 2023,
+  month        = may,
+  url          = {https://github.com/daidahao/MAD-GAN-PyTorch},
+  version      = {0.0.1}
 }
 ```
