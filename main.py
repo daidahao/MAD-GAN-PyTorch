@@ -79,58 +79,51 @@ def test(model: MADGAN, data, n_iters, train_lr, batch_size):
 
 if __name__ == '__main__':
 
-    # parse arguments
+    ## Parse arguments
     parser = argparse.ArgumentParser()
+    # data arguments
     parser.add_argument('--train_data', type=str, default='data/SWaT_Dataset_Normal_v0.csv')
     parser.add_argument('--test_data', type=str, default='data/SWaT_Dataset_Attack_v0.csv')
     parser.add_argument('--train_skiprows', type=int, default=60*60*10)
     parser.add_argument('--batch_size', type=int, default=128)
-    parser.add_argument('--test_iters', type=int, default=10)
     parser.add_argument('--time_column', type=int, default=0)
     parser.add_argument('--label_column', type=int, default=-2)
     parser.add_argument('--sampling_period', type=int, default=10)
     parser.add_argument('--n_window', type=int, default=5)
+    # training arguments
     parser.add_argument('--train_lr', type=float, default=1e-4)
     parser.add_argument('--train_epochs', type=int, default=100)
+    # testing arguments
+    parser.add_argument('--test_iters', type=int, default=10)
+    # model arguments
     parser.add_argument('--model_path', type=str, default='model.pt')
     # get arguments
     args = parser.parse_args()
-    # data parameters
-    train_data, test_data = args.train_data, args.test_data
-    train_skiprows = args.train_skiprows
-    batch_size, test_iters = args.batch_size, args.test_iters
-    time_column, label_column = args.time_column, args.label_column
-    sampling_period = args.sampling_period
-    n_window = args.n_window
-    # training parameters
-    train_lr, train_epochs = args.train_lr, args.train_epochs
-    # model parameters
-    model_path = args.model_path
 
     t_start = timer()
 
     ## Prepare data
-    data, ts, _, normalizer = read_data(train_data, train_skiprows, 
-        sampling_period, time_column, label_column, None, n_window)
+    data, ts, _, normalizer = read_data(args.train_data, args.train_skiprows, 
+        args.sampling_period, args.time_column, args.label_column, None, args.n_window)
     n_feats = data.shape[2]
     print(f'Number of features: {n_feats}, number of samples: {data.shape[0]}')
-    print(f'Window size: {n_window}, sampling period: {sampling_period} seconds')
+    print(f'Window size: {args.n_window}, sampling period: {args.sampling_period} seconds')
     
     ## Init model
-    model = MADGAN(n_feats, n_window).double()
+    model = MADGAN(n_feats, args.n_window).double()
     
     ## Train model
     # Load model if file exists
-    if os.path.exists(model_path):
-        model.load_state_dict(torch.load(model_path))
-        print(f"Loading model from {model_path}")
+    if os.path.exists(args.model_path):
+        model.load_state_dict(torch.load(args.model_path))
+        print(f"Loading model from {args.model_path}")
     else:
     # Otherwise, train from scratch
-        print(f"No model found at {model_path}")
+        print(f"No model found at {args.model_path}")
         print(f"Creating new model: {model.name}")
 
-        for epoch in tqdm(range(0, train_epochs)):
-            _ = train(model, data, epoch, train_lr, batch_size)
+        for epoch in tqdm(range(0, args.train_epochs)):
+            _ = train(model, data, epoch, args.train_lr, args.batch_size)
         print(f'Training time: {timer() - t_start:.2f} seconds')
 
     ## Test
@@ -141,13 +134,13 @@ if __name__ == '__main__':
     t_start = timer()
 
     # Load test data
-    data, ts, labels, _ = read_data(test_data, 0,
-        sampling_period, time_column, label_column, normalizer, n_window)
+    data, ts, labels, _ = read_data(args.test_data, 0,
+        args.sampling_period, args.time_column, args.label_column, normalizer, args.n_window)
     print(f'Number of features: {n_feats}, number of samples: {data.shape[0]}')
-    print(f'Window size: {n_window}, sampling period: {sampling_period} seconds')
+    print(f'Window size: {args.n_window}, sampling period: {args.sampling_period} seconds')
 
     # Test
-    scores = test(model, data, test_iters, train_lr, batch_size)
+    scores = test(model, data, args.test_iters, args.train_lr, args.batch_size)
     scores = np.mean(scores, axis=1)
     print(f'Testing time: {timer() - t_start:.2f} seconds')
 
@@ -159,5 +152,5 @@ if __name__ == '__main__':
     print(f'AUC-ROC: {auc_roc:.3f}')
 
     # Save model
-    print(f'Saving model to {model_path}')
-    torch.save(model.state_dict(), model_path)
+    print(f'Saving model to {args.model_path}')
+    torch.save(model.state_dict(), ags.model_path)
