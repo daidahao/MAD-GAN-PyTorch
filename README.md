@@ -45,7 +45,7 @@ These datasets are from the Secure Water Treatment (SWaT) testbed and contain ti
 
 ## Acknowledgements
 
-Thanks for the [original MAD-GAN implementation](https://github.com/imperial-qore/TranAD) in TensorFlow and [TranAD](https://github.com/imperial-qore/TranAD) in PyTorch.
+Thanks for the [original MAD-GAN implementation](https://github.com/LiDan456/MAD-GANs) in TensorFlow and [TranAD](https://github.com/imperial-qore/TranAD) in PyTorch.
 
 ## Citation
 
