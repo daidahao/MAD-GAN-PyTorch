@@ -153,4 +153,4 @@ if __name__ == '__main__':
 
     # Save model
     print(f'Saving model to {args.model_path}')
-    torch.save(model.state_dict(), ags.model_path)
+    torch.save(model.state_dict(), args.model_path)
